@@ -32,7 +32,7 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: 'Shelves',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="md-list" size={28} color={tintColor} />
+        <Icon name="md-list-circle-outline" size={28} color={tintColor} />
       ),
     },
   },
@@ -41,7 +41,7 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: 'Discover',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="md-bulb" size={28} color={tintColor} />
+        <Icon name="md-compass-outline" size={28} color={tintColor} />
       ),
     },
   },

@@ -107,7 +107,7 @@ export default class Shelves extends Component {
         <StatusBar barStyle="light-content" />
         <Header>
           <Body>
-            <Title>Kutuphanem</Title>
+            <Title>Raflar</Title>
           </Body>
           <View>
             <DialogInput

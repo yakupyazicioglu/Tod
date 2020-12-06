@@ -67,7 +67,7 @@ export default class Books extends Component {
         <StatusBar barStyle="light-content" />
         <Header>
           <Body>
-            <Title>Kutuphanem</Title>
+            <Title>Kesfet</Title>
           </Body>
           <Right>
             <Button transparent>

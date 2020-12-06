@@ -61,13 +61,12 @@ export default class Books extends Component {
   _keyExtractor = (item, index) => item.bId.toString();
 
   render() {
-    //this.getDeviceId();
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <Header>
           <Body>
-            <Title>Kutuphanem</Title>
+            <Title>Tod</Title>
           </Body>
           <Right>
             <Button transparent>

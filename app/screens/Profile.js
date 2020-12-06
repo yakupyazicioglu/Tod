@@ -56,7 +56,7 @@ export default class Profile extends Component {
         <StatusBar barStyle="light-content" />
         <Header>
           <Body>
-            <Title>Kutuphanem</Title>
+            <Title>Profil</Title>
           </Body>
           <Right>
             <Button transparent>
