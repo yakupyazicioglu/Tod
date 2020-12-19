@@ -23,7 +23,7 @@ export default class ViewAuthor extends Component {
   }
 
   componentDidMount() {
-    fetch('http://192.168.1.136:3003/author/' + this.state.bId)
+    fetch('http://165.232.77.107:3003/author/' + this.state.bId)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({

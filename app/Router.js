@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {Icon} from 'native-base';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import Books from './screens/Books';
 import Home from './screens/Home';
@@ -11,11 +12,8 @@ import Discover from './screens/Discover';
 import ScanBarcode from './screens/ScanBarcode';
 import Shelves from './screens/Shelves';
 import Profile from './screens/Profile';
-import ViewBook from './views/ViewBook';
-import ViewAuthor from './views/ViewAuthor';
+import BookDetails from './views/BookDetails';
 import ViewShelf from './views/ViewShelf';
-
-let screen = Dimensions.get('window');
 
 export const Tabs = createBottomTabNavigator({
   Home: {
@@ -23,7 +21,7 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: 'Home',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="md-home-sharp" size={28} color={tintColor} />
+        <AntDesign name="home" size={28} color={tintColor} />
       ),
     },
   },
@@ -32,7 +30,7 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: 'Shelves',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="md-list-circle-outline" size={28} color={tintColor} />
+        <AntDesign name="bars" size={28} color={tintColor} />
       ),
     },
   },
@@ -41,7 +39,7 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: 'Discover',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="md-compass-outline" size={28} color={tintColor} />
+        <AntDesign name="find" size={28} color={tintColor} />
       ),
     },
   },
@@ -50,7 +48,7 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: 'Profile',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="md-person" size={28} color={tintColor} />
+        <AntDesign name="user" size={28} color={tintColor} />
       ),
     },
   },
@@ -64,7 +62,7 @@ export const BookcaseStack = createStackNavigator({
     }),
   },
   ViewBook: {
-    screen: ViewBook,
+    screen: BookDetails,
     navigationOptions: ({navigation}) => ({
       headerShown: false,
       gestureEnabled: false,

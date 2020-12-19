@@ -37,7 +37,7 @@ export default class Books extends Component {
   }; */
 
   componentDidMount() {
-    fetch('http://192.168.1.136:3003/books')
+    fetch('http://165.232.77.107:3003/books')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({

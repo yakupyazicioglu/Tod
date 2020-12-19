@@ -8,7 +8,7 @@ export default class MaterialCard extends Component {
     return (
       <TouchableOpacity
         onPress={() =>
-          this.props.navigation.navigate('ViewBook', {
+          this.props.navigation.navigate('BookDetails', {
             bId: this.props.bId,
             isbn: this.props.isbn,
             cover: this.props.cover,
@@ -35,7 +35,8 @@ export default class MaterialCard extends Component {
                     imageSize={20}
                     ratingColor="#3498db"
                     ratingBackgroundColor="#c8c7c8"
-                    style={{ paddingVertical: 12 }} />
+                    style={{paddingVertical: 12}}
+                  />
                 </View>
               </View>
             </Body>

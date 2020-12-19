@@ -3,6 +3,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
   FlatList,
   View,
 } from 'react-native';
@@ -17,27 +18,22 @@ import {
   Icon,
   Title,
 } from 'native-base';
-import BookItem from '../components/BookItem';
-//import DeviceInfo from 'react-native-device-info';
+import BookItem from '../components/BookItem2';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+const Dev_Height = Dimensions.get('window').height;
+const Dev_width = Dimensions.get('window').width;
 
 export default class Books extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataSource: [],
-      deviceId: '',
     };
   }
 
-  /* getDeviceId = () => {
-    //Getting the Unique Id from here
-    var id = DeviceInfo.getUniqueID();
-    this.setState({deviceId: id});
-    console.log(this.deviceId);
-  }; */
-
   componentDidMount() {
-    fetch('http://192.168.1.136:3003/books')
+    fetch('http://165.232.77.107:3003/books')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -61,21 +57,31 @@ export default class Books extends Component {
   _keyExtractor = (item, index) => item.bId.toString();
 
   render() {
+    //this.getDeviceId();
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <Header>
+        <Header style={{backgroundColor: 'transparent'}}>
+          <Left>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate('ScanBarcode', {})}>
+              <Ionicons name="ios-menu" size={32} color="#7FA1F8" />
+            </Button>
+          </Left>
           <Body>
             <Title>Tod</Title>
           </Body>
           <Right>
-            <Button transparent>
-              <Icon name="search" />
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate('ScanBarcode', {})}>
+              <Ionicons name="ios-search" size={24} color="#7FA1F8" />
             </Button>
             <Button
               transparent
               onPress={() => this.props.navigation.navigate('ScanBarcode', {})}>
-              <Icon name="md-barcode" />
+              <Ionicons name="ios-barcode-sharp" size={24} color="#7FA1F8" />
             </Button>
           </Right>
         </Header>
@@ -93,5 +99,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
+    height: Dev_Height,
+    width: Dev_width,
   },
 });
