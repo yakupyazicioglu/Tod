@@ -18,23 +18,13 @@ import {
   Title,
 } from 'native-base';
 import BookItem from '../components/BookItem';
-//import DeviceInfo from 'react-native-device-info';
-
 export default class Books extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataSource: [],
-      deviceId: '',
     };
   }
-
-  /* getDeviceId = () => {
-    //Getting the Unique Id from here
-    var id = DeviceInfo.getUniqueID();
-    this.setState({deviceId: id});
-    console.log(this.deviceId);
-  }; */
 
   componentDidMount() {
     fetch('http://165.232.77.107:3003/books')
@@ -61,7 +51,6 @@ export default class Books extends Component {
   _keyExtractor = (item, index) => item.bId.toString();
 
   render() {
-    //this.getDeviceId();
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />

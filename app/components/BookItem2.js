@@ -13,19 +13,22 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 const Dev_Height = Dimensions.get('window').height;
 const Dev_Width = Dimensions.get('window').width;
 
-class BookItem extends Component {
+class BookItem2 extends Component {
+  submitData = () => {
+    console.log('button pressed');
+    this.props.navigation.navigate('BookDetails', {
+      bId: this.props.bId,
+      isbn: this.props.isbn,
+      cover: this.props.cover,
+      title: this.props.title,
+      authors: this.props.authors,
+      publisher: this.props.publisher,
+    });
+  };
+
   render() {
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('BookDetails', {
-            bId: this.props.bId,
-            isbn: this.props.isbn,
-            cover: this.props.cover,
-            title: this.props.title,
-            authors: this.props.authors,
-          })
-        }>
+      <TouchableOpacity onPress={() => this.submitData()}>
         <SafeAreaView style={{height: 120, width: Dev_Width, marginTop: 8}}>
           <View
             style={{
@@ -93,4 +96,4 @@ class BookItem extends Component {
   }
 }
 
-export default BookItem;
+export default BookItem2;

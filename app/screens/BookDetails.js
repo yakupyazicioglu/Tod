@@ -35,7 +35,7 @@ const genreDatas = [
   },
 ];
 
-export default class BookItem extends React.Component {
+export default class BookDetails extends React.Component {
   renderGenre = ({item}) => (
     <Button
       key={item.gValue}
