@@ -1,100 +1,136 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, TouchableOpacity, Image, Text} from 'react-native';
-import {Card, Body, CardItem, Button, Icon, Left, Right} from 'native-base';
-import {Rating} from 'react-native-ratings';
+import React from 'react';
+import {
+  Text,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+} from 'react-native';
+import {ProgressBar} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-export default class MaterialCard extends Component {
-  render() {
-    return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('BookDetails', {
-            bId: this.props.bId,
-            isbn: this.props.isbn,
-            cover: this.props.cover,
-            title: this.props.title,
-            authors: this.props.authors,
-          })
-        }>
-        <Card style={styles.container}>
-          <CardItem>
-            <Left>
-              <Image
-                source={{
-                  uri: this.props.cover,
-                }}
-                style={styles.cardItemImagePlace}
+const Dev_Height = Dimensions.get('window').height;
+const Dev_Width = Dimensions.get('window').width;
+
+function BookItem(props) {
+  const navigation = useNavigation();
+  const submitData = () => {
+    navigation.navigate('BookDetails', {
+      bId: props.bId,
+      isbn: props.isbn,
+      cover: props.cover,
+      title: props.title,
+      authors: props.authors,
+      publisher: props.publisher,
+    });
+  };
+
+  return (
+    <TouchableOpacity onPress={submitData}>
+      <SafeAreaView style={styles.sView}>
+        <View style={styles.view}>
+          {/* Book cover view */}
+          <View style={styles.bView}>
+            <Image
+              style={styles.bCover}
+              source={{
+                uri: props.cover,
+              }}
+            />
+          </View>
+
+          {/* Book details view */}
+          <View style={styles.bDetails}>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.bTitle}>
+              {props.title}
+            </Text>
+            <Text style={styles.aName}>{props.authors.aName}</Text>
+
+            {/* Point and Review view */}
+            <View style={styles.bPointReview}>
+              <AntDesign
+                name="star"
+                size={18}
+                color="#FFD700"
+                style={styles.bPointIcon}
               />
-            </Left>
-            <Body>
-              <View style={styles.bodyContent}>
-                <Text style={styles.title}>{this.props.title}</Text>
-                <Text style={styles.authors}>{this.props.authors.aName}</Text>
-                <View style={styles.cardButtons}>
-                  <Rating
-                    imageSize={20}
-                    ratingColor="#3498db"
-                    ratingBackgroundColor="#c8c7c8"
-                    style={{paddingVertical: 12}}
-                  />
-                </View>
-              </View>
-            </Body>
-          </CardItem>
-        </Card>
-      </TouchableOpacity>
-    );
-  }
+              <Text style={styles.bPointText}> {props.point} </Text>
+              <Text style={styles.bReviewText}>({props.review} Review)</Text>
+            </View>
+            <ProgressBar
+              style={styles.bProgress}
+              progress={0.5}
+              color="#7Fa1F8"
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    </TouchableOpacity>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    paddingLeft: 8,
-    paddingRight: 8,
-    backgroundColor: '#FFF',
-    flexWrap: 'nowrap',
-    elevation: 3,
-    borderRadius: 2,
-    borderColor: '#CCC',
-    borderWidth: 1,
-    shadowOffset: {
-      height: 2,
-      width: -2,
-    },
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 1.5,
-    overflow: 'hidden',
+    backgroundColor: '#F5FCFF',
   },
-  cardItemImagePlace: {
-    width: 80,
+  bDetails: {
+    width: '80%',
+  },
+  bTitle: {
+    width: '70%',
+    marginLeft: '10%',
+    marginTop: '2%',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  bView: {
     height: 120,
-    backgroundColor: '#ccc',
-    padding: 4,
+    width: '20%',
+    marginLeft: '7%',
   },
-  bodyContent: {
-    height: 120,
-    flex: 1,
-    padding: 4,
+  bCover: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 8,
   },
-  title: {
-    color: '#000',
-    paddingBottom: 8,
-    fontSize: 20,
-    fontFamily: 'roboto-regular',
-  },
-  authors: {
-    color: '#000',
-    opacity: 0.5,
-    fontSize: 12,
-    fontFamily: 'roboto-regular',
-    lineHeight: 16,
-  },
-  cardButtons: {
+  bPointReview: {
     flexDirection: 'row',
-    fontSize: 14,
+    marginTop: '4%',
+  },
+  bPointIcon: {
+    marginLeft: '10%',
+  },
+  bPointText: {
+    marginLeft: '2%',
+  },
+  bReviewText: {
+    marginLeft: '2%',
+    color: '#808080',
+  },
+  bProgress: {
+    height: '15%',
+    width: 225,
+    marginLeft: '10%',
+    marginTop: '6%',
+  },
+  aName: {
+    marginLeft: '10%',
+  },
+  view: {
+    height: '20%',
+    width: '100%',
+    flexDirection: 'row',
+    marginTop: '2%',
+  },
+  sView: {
+    height: 120,
+    width: Dev_Width,
+    marginTop: 8,
   },
 });
+
+export default React.memo(BookItem);

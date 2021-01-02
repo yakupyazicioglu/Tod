@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect, memo} from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -17,26 +17,22 @@ import {
   Icon,
   Title,
 } from 'native-base';
-import BookItem from '../components/BookItem';
-export default class Books extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dataSource: [],
-    };
-  }
 
-  componentDidMount() {
+import BookItem from '../components/BookItem';
+
+function Discover({navigation}) {
+  const [dataSource, setDataSource] = useState([]);
+  //const memoizedValue = useMemo(() => renderItem, dataSource);
+
+  useEffect(() => {
     fetch('http://165.232.77.107:3003/books')
       .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({
-          dataSource: responseJson,
-        });
+        setDataSource(responseJson);
       });
-  }
+  });
 
-  _renderItem = ({item}) => (
+  const renderItem = ({item}) => (
     <BookItem
       bId={item.bId}
       isbn={item.isbn}
@@ -44,39 +40,23 @@ export default class Books extends Component {
       authors={item.authors[0]}
       cover={item.cover}
       publisher={item.publisher}
-      navigation={this.props.navigation}
+      navigation={navigation}
     />
   );
 
-  _keyExtractor = (item, index) => item.bId.toString();
+  const keyExtractor = (item) => {
+    return item.bId;
+  };
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <Header>
-          <Body>
-            <Title>Kesfet</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon name="search" />
-            </Button>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate('ScanBarcode', {})}>
-              <Icon name="md-barcode-outline" />
-            </Button>
-          </Right>
-        </Header>
-        <FlatList
-          data={this.state.dataSource}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
-        />
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={dataSource}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -85,3 +65,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 });
+
+export default Discover;
