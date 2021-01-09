@@ -30,9 +30,9 @@ function Discover({navigation}) {
       .then((responseJson) => {
         setDataSource(responseJson);
       });
-  });
+  }, []);
 
-  const renderItem = ({item}) => (
+  const renderBooks = ({item}) => (
     <BookItem
       bId={item.bId}
       isbn={item.isbn}
@@ -40,7 +40,7 @@ function Discover({navigation}) {
       authors={item.authors[0]}
       cover={item.cover}
       publisher={item.publisher}
-      navigation={navigation}
+      book={item}
     />
   );
 
@@ -53,7 +53,7 @@ function Discover({navigation}) {
       <FlatList
         data={dataSource}
         keyExtractor={keyExtractor}
-        renderItem={renderItem}
+        renderItem={renderBooks}
       />
     </View>
   );

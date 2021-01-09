@@ -18,13 +18,9 @@ const Dev_Width = Dimensions.get('window').width;
 function BookItem(props) {
   const navigation = useNavigation();
   const submitData = () => {
+    //console.log(props);
     navigation.navigate('BookDetails', {
       bId: props.bId,
-      isbn: props.isbn,
-      cover: props.cover,
-      title: props.title,
-      authors: props.authors,
-      publisher: props.publisher,
     });
   };
 
