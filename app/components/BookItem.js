@@ -18,7 +18,6 @@ const Dev_Width = Dimensions.get('window').width;
 function BookItem(props) {
   const navigation = useNavigation();
   const submitData = () => {
-    //console.log(props);
     navigation.navigate('BookDetails', {
       bId: props.bId,
     });
@@ -58,7 +57,7 @@ function BookItem(props) {
             </View>
             <ProgressBar
               style={styles.bProgress}
-              progress={0.5}
+              progress={props.progress}
               color="#7Fa1F8"
             />
           </View>

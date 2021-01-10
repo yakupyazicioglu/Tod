@@ -3,34 +3,28 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  Text,
   FlatList,
   View,
 } from 'react-native';
-import {
-  Container,
-  Header,
-  Left,
-  Body,
-  Right,
-  Button,
-  Subtitle,
-  Icon,
-  Title,
-} from 'native-base';
 
+import Icon from 'react-native-vector-icons/Ionicons';
 import BookItem from '../components/BookItem';
 
 function Discover({navigation}) {
-  const [dataSource, setDataSource] = useState([]);
-  //const memoizedValue = useMemo(() => renderItem, dataSource);
+  const [books, setBooks] = useState([]);
 
   useEffect(() => {
     fetch('http://165.232.77.107:3003/books')
       .then((response) => response.json())
       .then((responseJson) => {
-        setDataSource(responseJson);
+        setBooks(responseJson);
       });
   }, []);
+
+  const scanBarcode = () => {
+    navigation.navigate('ScanBarcode');
+  };
 
   const renderBooks = ({item}) => (
     <BookItem
@@ -50,10 +44,39 @@ function Discover({navigation}) {
 
   return (
     <View style={styles.container}>
+      {/* Header view */}
+      <StatusBar translucent backgroundColor={'#7FA1F8'} />
+      <View
+        style={{
+          height: '7%',
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: '5%',
+        }}>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginLeft: '7%',
+            color: '#7FA1F8',
+          }}>
+          Tod's books
+        </Text>
+
+        <TouchableOpacity style={{marginLeft: '45%'}}>
+          <Icon name="ios-search" size={24} color="#7FA1F8" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{marginLeft: '4%'}} onPress={scanBarcode}>
+          <Icon name="ios-barcode-sharp" size={24} color="#7FA1F8" />
+        </TouchableOpacity>
+      </View>
       <FlatList
-        data={dataSource}
+        data={books}
         keyExtractor={keyExtractor}
         renderItem={renderBooks}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -63,6 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
+    marginTop: '2%',
   },
 });
 

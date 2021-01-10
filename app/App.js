@@ -16,9 +16,27 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Discover">
-        <Stack.Screen name="Discover" component={Discover} />
-        <Stack.Screen name="BookDetails" component={BookDetails} />
-        <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
+        <Stack.Screen
+          name="Discover"
+          component={Discover}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="BookDetails"
+          component={BookDetails}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ScanBarcode"
+          component={ScanBarcode}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

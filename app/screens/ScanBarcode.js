@@ -1,69 +1,75 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
   StyleSheet,
-  Alert,
+  Dimensions,
   TouchableOpacity,
+  FlatList,
+  SafeAreaView,
   Image,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 
-export default class ScanBarcode extends Component {
-  constructor(props) {
-    super(props);
-    this.handleTourch = this.handleTourch.bind(this);
-    this.state = {
-      torchOn: false,
-    };
-  }
-  onBarCodeRead = (e) => {
-    //Alert.alert('Barcode value is' + e.data, 'Barcode type is' + e.type);
-    this.props.navigation.navigate('AddBook', {
-      isbn: e.data,
+function ScanBarcode({navigation}) {
+  const [torch, setTorch] = useState(false);
+  const [book, setBook] = useState();
+
+  const getBookByIsbn = async (isbn) => {
+    await fetch('http://165.232.77.107:3003/isbn/' + isbn)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setBook(responseJson);
+      });
+    navigation.navigate('BookDetails', {
+      bId: book.bId,
     });
   };
-  render() {
-    return (
-      <View style={styles.container}>
-        <RNCamera
-          style={styles.preview}
-          flashMode={
-            this.state.torchOn
-              ? RNCamera.Constants.FlashMode.on
-              : RNCamera.Constants.FlashMode.off
-          }
-          androidCameraPermissionOptions={{
-            title: 'Permission to use camera',
-            message: 'We need your permission to use your camera',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
-          }}
-          onBarCodeRead={this.onBarCodeRead}
-          ref={(cam) => (this.camera = cam)}>
-          <Text
-            style={{
-              backgroundColor: 'white',
-            }}>
-            BARCODE SCANNER
-          </Text>
-        </RNCamera>
-        <View style={styles.bottomOverlay}>
-          <TouchableOpacity
-            onPress={() => this.handleTourch(this.state.torchOn)}>
-            <Image style={styles.cameraIcon} />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-  handleTourch(value) {
+
+  const onBarCodeRead = (e) => {
+    //Alert.alert('Barcode value is' + e.data, 'Barcode type is' + e.type);
+    getBookByIsbn(e.data);
+  };
+
+  const handleTourch = (value) => {
     if (value === true) {
-      this.setState({torchOn: false});
+      setTorch(false);
     } else {
-      this.setState({torchOn: true});
+      setTorch(true);
     }
-  }
+  };
+
+  return (
+    <View style={styles.container}>
+      <RNCamera
+        style={styles.preview}
+        type={RNCamera.Constants.Type.back}
+        flashMode={
+          torch
+            ? RNCamera.Constants.FlashMode.on
+            : RNCamera.Constants.FlashMode.off
+        }
+        androidCameraPermissionOptions={{
+          title: 'Permission to use camera',
+          message: 'We need your permission to use your camera',
+          buttonPositive: 'Ok',
+          buttonNegative: 'Cancel',
+        }}
+        onBarCodeRead={onBarCodeRead}>
+        <Text
+          style={{
+            backgroundColor: 'white',
+          }}>
+          Scan Barcode
+        </Text>
+      </RNCamera>
+      <View style={styles.bottomOverlay}>
+        <TouchableOpacity onPress={() => handleTourch(torch)}>
+          <Image style={styles.cameraIcon} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -89,3 +95,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 });
+
+export default ScanBarcode;
