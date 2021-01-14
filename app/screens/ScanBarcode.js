@@ -1,85 +1,88 @@
-import React, {Component} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Alert,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, View, StyleSheet, LogBox, Button} from 'react-native';
 import {RNCamera} from 'react-native-camera';
+import BarcodeMask from 'react-native-barcode-mask';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Item, Input} from 'native-base';
 
-export default class ScanBarcode extends Component {
-  constructor(props) {
-    super(props);
-    this.handleTourch = this.handleTourch.bind(this);
-    this.state = {
-      torchOn: false,
-    };
-  }
-  onBarCodeRead = (e) => {
-    //Alert.alert('Barcode value is' + e.data, 'Barcode type is' + e.type);
-    this.props.navigation.navigate('AddBook', {
-      isbn: e.data,
+function ScanBarcode({navigation}) {
+  const [book, setBook] = useState();
+  const [barcode, setBarcode] = useState();
+
+  useEffect(() => {
+    LogBox.ignoreLogs(['Possible Unhandled Promise Rejection']);
+  }, []);
+
+  const getBookByIsbn = async (isbn) => {
+    await fetch('http://165.232.77.107:3003/isbn/' + isbn)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setBook(responseJson);
+        setBarcode(book.title);
+      });
+  };
+
+  const onBarCodeRead = (e) => {
+    getBookByIsbn(e.data);
+  };
+
+  const onGetItemPress = () => {
+    navigation.navigate('BookDetails', {
+      bId: book.bId,
     });
   };
-  render() {
-    return (
-      <View style={styles.container}>
+
+  const handleChange = () => {
+    // handle user input
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.upperSection}>
         <RNCamera
           style={styles.preview}
-          flashMode={
-            this.state.torchOn
-              ? RNCamera.Constants.FlashMode.on
-              : RNCamera.Constants.FlashMode.off
-          }
+          type={RNCamera.Constants.Type.back}
+          captureAudio={false}
+          captureVideo={false}
           androidCameraPermissionOptions={{
             title: 'Permission to use camera',
             message: 'We need your permission to use your camera',
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel',
           }}
-          onBarCodeRead={this.onBarCodeRead}
-          ref={(cam) => (this.camera = cam)}>
-          <Text
-            style={{
-              backgroundColor: 'white',
-            }}>
-            BARCODE SCANNER
-          </Text>
+          onBarCodeRead={onBarCodeRead}>
+          <BarcodeMask
+            edgeColor={'#62B1F6'}
+            showAnimatedLine={false}
+            outerMaskOpacity={0.8}
+            edgeBorderWidth={1}
+          />
         </RNCamera>
-        <View style={styles.bottomOverlay}>
-          <TouchableOpacity
-            onPress={() => this.handleTourch(this.state.torchOn)}>
-            <Image style={styles.cameraIcon} />
-          </TouchableOpacity>
-        </View>
       </View>
-    );
-  }
-  handleTourch(value) {
-    if (value === true) {
-      this.setState({torchOn: false});
-    } else {
-      this.setState({torchOn: true});
-    }
-  }
+      <View style={styles.lowerSection}>
+        <Item>
+          <Icon name="ios-barcode-sharp" size={24} color="#7FA1F8" />
+          <Input
+            placeholder="Barcode of the item"
+            value={barcode}
+            onChangeText={handleChange}
+          />
+        </Item>
+
+        <Button title="Go to the book" onPress={onGetItemPress} />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
   },
   preview: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-  },
-  cameraIcon: {
-    margin: 5,
-    height: 40,
-    width: 40,
   },
   bottomOverlay: {
     position: 'absolute',
@@ -88,4 +91,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  upperSection: {
+    flex: 1,
+  },
+  lowerSection: {
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+  },
 });
+
+export default ScanBarcode;

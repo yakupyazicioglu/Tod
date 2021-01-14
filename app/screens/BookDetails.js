@@ -5,169 +5,171 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  BackHandler,
   FlatList,
   SafeAreaView,
+  ScrollView,
+  LogBox,
   Image,
 } from 'react-native';
-import {Ionicons} from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Button} from 'native-base';
 import {ProgressBar} from 'react-native-paper';
 import {Rating} from 'react-native-ratings';
-import Button from '@ui-kitten/components';
+import Divider from '../components/DividerItem';
 
 const Dev_Height = Dimensions.get('window').height;
 const Dev_width = Dimensions.get('window').width;
 
-const genreDatas = [
-  {
-    gId: 'ccaffff5a32d420c',
-    gName: 'Siir',
-    gValue: 100,
-  },
-  {
-    gId: 'ccaffff5a32d420c',
-    gName: 'Roman',
-    gValue: 100,
-  },
-  {
-    gId: 'ccaffff5a32d420c',
-    gName: 'Tarih',
-    gValue: 100,
-  },
-];
+function BookDetails({route, navigation}) {
+  const [book, setBook] = useState('');
+  const [loading, setLoading] = useState(true);
+  const {bId} = route.params;
+  //console.log('book: ' + JSON.stringify(book));
 
-export default class BookDetails extends React.Component {
-  renderGenre = ({item}) => (
-    <Button
-      key={item.gValue}
-      style={{marginHorizontal: 4, borderRadius: 16, marginTop: '4%'}}
-      size="tiny"
-      title={item.gName}></Button>
+  const getBookById = () => {
+    console.log('bookId: ' + bId);
+    fetch('http://165.232.77.107:3003/book/' + bId)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setBook(responseJson);
+      });
+  };
+
+  useEffect(() => {
+    fetch('http://165.232.77.107:3003/book/' + bId)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setBook(responseJson);
+      });
+
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+
+    const backAction = () => {
+      navigation.navigate('Discover');
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const renderGenre = ({item}) => (
+    <Button rounded small warning style={{margin: 2}}>
+      <Text style={{fontSize: 12, padding: 2}}>{item.gName}</Text>
+    </Button>
   );
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View
-          style={{
-            height: '7%',
-            width: '100%',
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: '5%',
-          }}>
-          <TouchableOpacity style={{marginLeft: '8%'}}>
-            <Ionicons name="ios-menu" size={32} color="#7FA1F8" />
-          </TouchableOpacity>
 
-          <TouchableOpacity style={{marginLeft: '60%'}}>
-            <Ionicons name="ios-search" size={24} color="#7FA1F8" />
-          </TouchableOpacity>
+  const renderAuthor = ({item}) => (
+    <Text numberOfLines={2} style={{fontSize: 16, padding: 2}}>
+      {item.aName}
+    </Text>
+  );
 
-          <TouchableOpacity style={{marginLeft: '4%'}}>
-            <Ionicons name="ios-barcode-sharp" size={24} color="#7FA1F8" />
-          </TouchableOpacity>
-        </View>
+  const ratingCompleted = (rating) => {
+    console.log('Rating is: ' + rating);
+  };
 
-        <View
-          style={{
-            height: '20%',
-            width: '100%',
-            flexDirection: 'row',
-            marginTop: '2%',
-          }}>
-          <View style={{height: '180%', width: '40%', marginLeft: '7%'}}>
+  const scanBarcode = () => {
+    navigation.navigate('ScanBarcode');
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header view */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={{marginLeft: '6%'}}
+          onPress={() => navigation.navigate('Discover')}>
+          <Icon name="ios-arrow-back-sharp" size={32} color="#7FA1F8" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{marginLeft: '75%'}} onPress={scanBarcode}>
+          <Icon name="ios-barcode-sharp" size={24} color="#7FA1F8" />
+        </TouchableOpacity>
+      </View>
+      <ScrollView style={styles.scrollView}>
+        {/* Book contents view */}
+        <View style={styles.bookContents}>
+          {/* Book cover view */}
+          <View style={styles.bookCover}>
             <Image
-              style={{height: '100%', width: '100%', borderRadius: 15}}
+              style={styles.bookImg}
               source={{
-                uri:
-                  'https://i.idefix.com/cache/500x400-0/originals/0001778480001-1.jpg',
+                uri: book.cover,
               }}
             />
           </View>
 
-          <View>
-            <Text
-              style={{
-                marginLeft: '10%',
-                marginTop: '5%',
-                fontWeight: 'bold',
-                fontSize: 16,
-              }}>
-              {' '}
-              The Blue Bear
-            </Text>
-            <Text style={{marginLeft: '10%', marginTop: '8%', fontSize: 12}}>
-              {' '}
-              Tesa Stevens{' '}
+          {/* Book details view */}
+          <View style={styles.bookDetails}>
+            <Text numberOfLines={4} style={styles.bookTitle}>
+              {book.title}
             </Text>
 
-            <Text style={{marginLeft: '10%', marginTop: '8%', fontSize: 10}}>
-              {' '}
-              İş Bankası Kültür Yayınları{' '}
-            </Text>
-
-            <Text style={{marginLeft: '10%', marginTop: '8%', fontSize: 10}}>
-              {' '}
-              2016{' '}
-            </Text>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: '4%',
-                marginLeft: '15%',
-              }}></View>
-            <View>
+            <View style={styles.bookAuthor}>
               <FlatList
-                data={genreDatas}
-                renderItem={this.renderGenre}
-                horizontal={true}
-                style={{marginLeft: '12%'}}
+                data={book.authors}
+                renderItem={renderAuthor}
+                keyExtractor={(item) => item.aId}
+                horizontal={false}
+                numColumns={2}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+
+            <Text style={styles.bookPublisher}>{book.publisher}</Text>
+
+            <Text style={styles.publishDate}>{book.publishDate}</Text>
+
+            <Text style={styles.publishDate}>{book.isbn}</Text>
+
+            <View style={styles.bookGenres}>
+              <FlatList
+                data={book.genres}
+                renderItem={renderGenre}
+                keyExtractor={(item) => item.gId}
+                horizontal={false}
+                numColumns={2}
+                showsHorizontalScrollIndicator={false}
+                style={{
+                  flexWrap: 'wrap',
+                  alignContent: 'center',
+                }}
               />
             </View>
           </View>
         </View>
 
-        <View style={{height: '20%', width: '90%', marginTop: '25%'}}>
+        {/* Book progress and summary view */}
+        <View style={styles.bookProgSumView}>
           <View>
             <ProgressBar
-              style={{
-                height: '10%',
-                width: '90%',
-                marginLeft: '10%',
-                marginTop: '8%',
-              }}
-              progress={0.2}
+              style={styles.bookProgress}
+              progress={book.progress}
               color="#7Fa1F8"
             />
             <Rating
-              style={{paddingVertical: 10, marginTop: '6%'}}
+              style={styles.bookRating}
               type="star"
-              imageSize={20}
+              imageSize={30}
               ratingCount={10}
-              ratingColor="#3498db"
-              ratingBackgroundColor="#c8c7c8"
+              startingValue={0}
+              showRating
+              onStartRating={ratingCompleted}
+              tintColor="#7Fa1F8"
             />
           </View>
-          <Text
-            style={{
-              marginLeft: '10%',
-              marginTop: '4%',
-              fontSize: 12,
-            }}>
-            Ailesinin tek çocuğu olan Pyotr Andreyiçin yazgısı daha doğduğu gün
-            belli olmuştur. Çariçenin ordusunda asker olarak hizmet etmek.
-            Sessiz ve sakin küçük bir taşra kalesine atanan Asteğmen Pyotr
-            Andreyiç, kalenin komutanın kızı Marya Ivanovaya aşık olur ve tam
-            her şey yoluna girmek üzereyken bir Kazak isyanı baş gösterir. İki
-            sevgilinin yolları ayrılır ve Pyotr Andreyiç sevdiği kıza kavuşmak
-            için her şeyi yapmaya hazırdır. Ucunda ölüm olsa bile! (Tanıtım
-            Bülteninden)  
-          </Text>
+          <Text style={styles.bookSummary}>{book.summary}</Text>
         </View>
-      </SafeAreaView>
-    );
-  }
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -175,4 +177,88 @@ const styles = StyleSheet.create({
     height: Dev_Height,
     width: Dev_width,
   },
+  scrollView: {
+    flex: 1,
+    marginBottom: 0,
+  },
+  header: {
+    height: '7%',
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: '4%',
+    marginBottom: 4,
+  },
+  bookContents: {
+    height: 300,
+    width: '100%',
+    flexDirection: 'row',
+  },
+  bookCover: {
+    height: 300,
+    width: '45%',
+    marginLeft: '6%',
+  },
+  bookImg: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 15,
+  },
+  bookDetails: {
+    flex: 1,
+    flexDirection: 'column',
+    marginLeft: '4%',
+    height: 300,
+    width: '55%',
+  },
+  bookTitle: {
+    marginTop: 4,
+    marginBottom: 4,
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  bookAuthor: {
+    marginTop: 4,
+    marginBottom: 4,
+    flexDirection: 'row',
+  },
+  bookPublisher: {
+    marginTop: 8,
+    marginBottom: 8,
+    fontSize: 12,
+  },
+  publishDate: {
+    marginTop: 8,
+    marginBottom: 8,
+    fontSize: 12,
+  },
+  bookGenres: {
+    flexDirection: 'row',
+    marginTop: 12,
+  },
+  bookProgSumView: {
+    height: '100%',
+    width: '90%',
+    marginTop: 18,
+  },
+  bookRating: {
+    paddingVertical: 10,
+    marginLeft: '10%',
+  },
+  bookProgress: {
+    height: 4,
+    width: '90%',
+    marginLeft: '10%',
+  },
+  bookSummary: {
+    width: '90%',
+    height: '100%',
+    marginLeft: '10%',
+    marginRight: '10%',
+    marginTop: 4,
+    marginBottom: 4,
+    fontSize: 14,
+  },
 });
+
+export default BookDetails;
