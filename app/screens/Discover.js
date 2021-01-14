@@ -77,6 +77,9 @@ function Discover({navigation}) {
         keyExtractor={keyExtractor}
         renderItem={renderBooks}
         showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={() => (
+          <View style={{height: 2, backgroundColor: '#F5FCFF'}} />
+        )}
       />
     </View>
   );

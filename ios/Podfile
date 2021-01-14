@@ -5,9 +5,11 @@ platform :ios, '10.0'
 
 target 'Tod' do
   config = use_native_modules!
-
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   use_react_native!(:path => config["reactNativePath"])
-
   target 'TodTests' do
     inherit! :complete
     # Pods for testing

@@ -25,7 +25,7 @@ function BookItem(props) {
 
   return (
     <TouchableOpacity onPress={submitData}>
-      <SafeAreaView style={styles.sView}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.view}>
           {/* Book cover view */}
           <View style={styles.bView}>
@@ -53,13 +53,7 @@ function BookItem(props) {
                 style={styles.bPointIcon}
               />
               <Text style={styles.bPointText}> {props.point} </Text>
-              <Text style={styles.bReviewText}>({props.review} Review)</Text>
             </View>
-            <ProgressBar
-              style={styles.bProgress}
-              progress={props.progress}
-              color="#7Fa1F8"
-            />
           </View>
         </View>
       </SafeAreaView>
@@ -71,16 +65,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
+    height: 120,
+    width: Dev_Width,
+    marginTop: 2,
+    marginBottom: 2,
   },
-  bDetails: {
-    width: '80%',
-  },
-  bTitle: {
-    width: '70%',
-    marginLeft: '10%',
-    marginTop: '2%',
-    fontWeight: 'bold',
-    fontSize: 18,
+  view: {
+    height: '100%',
+    width: '100%',
+    flexDirection: 'row',
   },
   bView: {
     height: 120,
@@ -92,39 +85,30 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 8,
   },
-  bPointReview: {
-    flexDirection: 'row',
-    marginTop: '4%',
-  },
-  bPointIcon: {
+  bDetails: {
     marginLeft: '10%',
+    width: '80%',
   },
-  bPointText: {
-    marginLeft: '2%',
-  },
-  bReviewText: {
-    marginLeft: '2%',
-    color: '#808080',
-  },
-  bProgress: {
-    height: '15%',
-    width: 225,
-    marginLeft: '10%',
-    marginTop: '6%',
+  bTitle: {
+    marginTop: 2,
+    marginBottom: 2,
+    width: '70%',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
   aName: {
-    marginLeft: '10%',
+    marginTop: 2,
+    marginBottom: 2,
   },
-  view: {
-    height: '20%',
-    width: '100%',
+  bPointReview: {
     flexDirection: 'row',
-    marginTop: '2%',
   },
-  sView: {
-    height: 120,
-    width: Dev_Width,
-    marginTop: 8,
+  bPointIcon: {
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  bPointText: {
+    marginLeft: 2,
   },
 });
 
