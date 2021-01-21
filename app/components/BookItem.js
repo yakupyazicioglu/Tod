@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   Image,
 } from 'react-native';
-import {ProgressBar} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -112,4 +111,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(BookItem);
+export default BookItem;

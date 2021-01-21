@@ -1,4 +1,4 @@
-import React, {useState, useEffect, memo} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   FlatList,
   View,
+  ActivityIndicator,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -13,17 +14,41 @@ import BookItem from '../components/BookItem';
 
 function Discover({navigation}) {
   const [books, setBooks] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetch('http://165.232.77.107:3003/books')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setBooks(responseJson);
-      });
+    setLoading(true);
+    makeApiRequest();
   }, []);
 
   const scanBarcode = () => {
     navigation.navigate('ScanBarcode');
+  };
+
+  const handleRefresh = () => {
+    console.log('refreshed');
+  };
+
+  const makeApiRequest = () => {
+    if (!loading) {
+      return;
+    }
+
+    //console.log('details: ' + page + ' ' + books.length + ' ' + loading);
+    fetch('http://165.232.77.107:3003/books/' + page)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setPage(page + 1);
+        setBooks(books => [...books, ...responseJson]);
+        setLoading(false);
+      });
+  };
+
+  const handleLoadMore = () => {
+    setLoading(true);
+    makeApiRequest();
   };
 
   const renderBooks = ({item}) => (
@@ -37,6 +62,22 @@ function Discover({navigation}) {
       book={item}
     />
   );
+
+  const renderFooter = () => {
+    if (!loading) {
+      return null;
+    }
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: '#CED0CE',
+        }}>
+        <ActivityIndicator animating size="large" color="#FFD700" />
+      </View>
+    );
+  };
 
   const keyExtractor = (item) => {
     return item.bId;
@@ -80,6 +121,11 @@ function Discover({navigation}) {
         ItemSeparatorComponent={() => (
           <View style={{height: 2, backgroundColor: '#F5FCFF'}} />
         )}
+        ListFooterComponent={renderFooter}
+        onRefresh={handleRefresh}
+        refreshing={refreshing}
+        onEndReachedThreshold={2}
+        onEndReached={handleLoadMore}
       />
     </View>
   );

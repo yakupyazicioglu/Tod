@@ -5,6 +5,7 @@ import Home from '../screens/Home';
 import About from '../screens/About';
 import Discover from '../screens/Discover';
 import BookDetails from '../screens/BookDetails';
+import ScanBarcode from '../screens/ScanBarcode';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ const MainStackNavigator = () => {
       }}>
       <Stack.Screen name="Home" component={Discover} />
       <Stack.Screen name="About" component={BookDetails} />
+      <Stack.Screen name="ScanBarcode" component={ScanBarcode} />
     </Stack.Navigator>
   );
 };
